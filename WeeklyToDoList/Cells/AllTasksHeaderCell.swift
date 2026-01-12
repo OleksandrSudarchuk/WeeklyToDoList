@@ -1,5 +1,5 @@
 //
-//  CellHeader.swift
+//  AllTasksHeaderCell.swift
 //  WeeklyToDoList
 //
 //  Created by Oleksandr Sudarchuk on 18/11/2025.
@@ -7,7 +7,7 @@
 
 import UIKit
 
-class CellHeader: UITableViewHeaderFooterView {
+class AllTasksHeaderCell: UITableViewHeaderFooterView {
     
     //MARK: - Variable and Constant
     static let identifier = "CellHeader"
@@ -19,8 +19,9 @@ class CellHeader: UITableViewHeaderFooterView {
     //MARK: - UI Components
     private let cellTextField: UITextField = {
         let tf = UITextField()
-        tf.font = .systemFont(ofSize: 20)
+        tf.font = .systemFont(ofSize: 17)
         tf.textAlignment = .left
+        tf.textColor = .white
         return tf
     }()
     
@@ -74,10 +75,10 @@ class CellHeader: UITableViewHeaderFooterView {
 }
 
 //MARK: - Extension Layout
-extension CellHeader {
+extension AllTasksHeaderCell {
     func setUpUI() {
         let bgView = UIView()
-        bgView.backgroundColor = .gray
+        bgView.backgroundColor = .systemBlue
         backgroundView = bgView
         
         contentView.addSubview(cellTextField)
@@ -93,7 +94,7 @@ extension CellHeader {
             cellTextField.leadingAnchor.constraint(equalTo: contentView.leadingAnchor, constant: 16),
             cellTextField.topAnchor.constraint(equalTo: contentView.topAnchor, constant: 8),
             cellTextField.bottomAnchor.constraint(equalTo: contentView.bottomAnchor, constant: -8),
-            
+            cellTextField.trailingAnchor.constraint(equalTo: addButton.leadingAnchor, constant: -8),
             
             addButton.leadingAnchor.constraint(equalTo: cellTextField.trailingAnchor, constant: 8),
             addButton.trailingAnchor.constraint(equalTo: deleteButton.leadingAnchor, constant: -8),

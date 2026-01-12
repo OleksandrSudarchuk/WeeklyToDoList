@@ -2,7 +2,7 @@
 //  Section+CoreDataClass.swift
 //  WeeklyToDoList
 //
-//  Created by Oleksandr Sudarchuk on 01/12/2025.
+//  Created by Oleksandr Sudarchuk on 05/01/2026.
 //
 //
 

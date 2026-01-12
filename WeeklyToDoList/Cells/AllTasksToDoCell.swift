@@ -1,5 +1,5 @@
 //
-//  CellDoTo.swift
+// AllTasksToDoCell.swift
 //  WeeklyToDoList
 //
 //  Created by Oleksandr Sudarchuk on 19/11/2025.
@@ -7,7 +7,7 @@
 
 import UIKit
 
-class CellDoTo: UITableViewCell {
+class AllTasksToDoCell: UITableViewCell {
     //MARK: - Variable and Constant
 
     static let identifier = "CellDoTo"
@@ -34,6 +34,7 @@ class CellDoTo: UITableViewCell {
     required init?(coder: NSCoder) {
         fatalError("init(coder:) has not been implemented")
     }
+    
     //MARK: - Functions
     func configure(text: String) {
         textField.text = text
@@ -42,8 +43,9 @@ class CellDoTo: UITableViewCell {
         onTextChange?(textField.text ?? "" )
     }
 }
+
 //MARK: - Extension
-extension CellDoTo {
+extension AllTasksToDoCell {
     func setUpUI() {
         contentView.addSubview(textField)
         
@@ -63,3 +65,4 @@ extension CellDoTo {
         
     }
 }
+ 

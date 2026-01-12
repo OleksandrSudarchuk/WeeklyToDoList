@@ -2,8 +2,17 @@
 <model type="com.apple.IDECoreDataModeler.DataModel" documentVersion="1.0" lastSavedToolsVersion="23788.4" systemVersion="24G84" minimumToolsVersion="Automatic" sourceLanguage="Swift" userDefinedModelVersionIdentifier="">
     <entity name="Item" representedClassName="Item" syncable="YES">
         <attribute name="createdAt" optional="YES" attributeType="Date" usesScalarValueType="NO"/>
+        <attribute name="id" optional="YES" attributeType="UUID" usesScalarValueType="NO"/>
         <attribute name="todos" optional="YES" attributeType="String"/>
+        <relationship name="plannedOccurrences" optional="YES" toMany="YES" deletionRule="Cascade" destinationEntity="PlannedTask" inverseName="item" inverseEntity="PlannedTask"/>
         <relationship name="section" optional="YES" maxCount="1" deletionRule="Nullify" destinationEntity="Section" inverseName="item" inverseEntity="Section"/>
+    </entity>
+    <entity name="PlannedTask" representedClassName="PlannedTask" syncable="YES">
+        <attribute name="createdAt" optional="YES" attributeType="Date" usesScalarValueType="NO"/>
+        <attribute name="day" optional="YES" attributeType="Date" usesScalarValueType="NO"/>
+        <attribute name="isDone" attributeType="Boolean" defaultValueString="NO" usesScalarValueType="YES"/>
+        <attribute name="priority" optional="YES" attributeType="Integer 16" defaultValueString="0" usesScalarValueType="YES"/>
+        <relationship name="item" maxCount="1" deletionRule="Deny" destinationEntity="Item" inverseName="plannedOccurrences" inverseEntity="Item"/>
     </entity>
     <entity name="Section" representedClassName="Section" syncable="YES">
         <attribute name="createdAt" optional="YES" attributeType="Date" usesScalarValueType="NO"/>

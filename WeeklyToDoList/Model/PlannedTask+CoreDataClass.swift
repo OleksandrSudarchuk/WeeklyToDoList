@@ -1,5 +1,5 @@
 //
-//  Item+CoreDataClass.swift
+//  PlannedTask+CoreDataClass.swift
 //  WeeklyToDoList
 //
 //  Created by Oleksandr Sudarchuk on 05/01/2026.
@@ -9,7 +9,7 @@
 import Foundation
 import CoreData
 
-@objc(Item)
-public class Item: NSManagedObject {
+@objc(PlannedTask)
+public class PlannedTask: NSManagedObject {
 
 }

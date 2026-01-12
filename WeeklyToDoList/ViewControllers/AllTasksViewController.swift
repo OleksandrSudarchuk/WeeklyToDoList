@@ -24,13 +24,14 @@ class AllTasksViewController: UIViewController  {
         self.tableView.delegate = self
         self.tableView.dataSource = self
         view.backgroundColor = .magenta
-        setUpViews()
+       
         setUpConstraints()
         fetchReqeust()
         navigationItem.rightBarButtonItem = UIBarButtonItem(image: UIImage(systemName: "plus"), style: .plain, target: self, action: #selector(addSectionButtonAction))
-        tableView.register(CellDoTo.self, forCellReuseIdentifier: CellDoTo.identifier)
-        tableView.register(CellHeader.self, forHeaderFooterViewReuseIdentifier: CellHeader.identifier)
+        tableView.register(AllTasksToDoCell.self, forCellReuseIdentifier: AllTasksToDoCell.identifier)
+        tableView.register(AllTasksHeaderCell.self, forHeaderFooterViewReuseIdentifier: AllTasksHeaderCell.identifier)
     }
+    
     //MARK: - Selectors
     @objc func addSectionButtonAction() {
         
@@ -43,6 +44,7 @@ class AllTasksViewController: UIViewController  {
         fetchReqeust()
         
     }
+    
     //MARK: - Functions
     func fetchReqeust() {
         do {
@@ -58,6 +60,7 @@ class AllTasksViewController: UIViewController  {
             print("Fetch reqeuste error:", error)
         }
     }
+    
     private func addRowToSectionAction(to section: Section) {
         
         let newRow = Item(context: CoreDataStorage.shared.context)
@@ -80,16 +83,19 @@ class AllTasksViewController: UIViewController  {
     }
     
 }
+
 //MARK: - Extensions
 extension AllTasksViewController: UITableViewDataSource, UITableViewDelegate {
     //MARK: - Header cell
     func numberOfSections(in tableView: UITableView) -> Int {
         self.sections.count
     }
+    
     func tableView(_ tableView: UITableView, viewForHeaderInSection section: Int) -> UIView? {
-        guard let header = tableView.dequeueReusableHeaderFooterView(withIdentifier: CellHeader.identifier) as? CellHeader else {
+        guard let header = tableView.dequeueReusableHeaderFooterView(withIdentifier: AllTasksHeaderCell.identifier) as? AllTasksHeaderCell else {
             fatalError("Faile to create header cell.")
         }
+        
         let sectionModel = sections[section]
         header.configure(with: sectionModel.titleOfSection ?? "" )
         header.onTextChange = { newText in
@@ -100,11 +106,13 @@ extension AllTasksViewController: UITableViewDataSource, UITableViewDelegate {
             
             
         }
+        
         header.onButtonAdd = { [weak self] in
             guard let self = self else {return}
             self.addRowToSectionAction(to: sectionModel)
             
         }
+        
         header.onBottonDelete = { [weak self] in
             guard let self = self else {return}
             let alarm = UIAlertController(title: "Delete section", message: "Do you want to delete \(sectionModel.titleOfSection ?? "") section?", preferredStyle: .alert)
@@ -122,9 +130,9 @@ extension AllTasksViewController: UITableViewDataSource, UITableViewDelegate {
         }
         return header
     }
-    func tableView(_ tableView: UITableView, heightForHeaderInSection section: Int) -> CGFloat {
-        44
-    }
+    
+ 
+    
     //MARK: - Noramal cell
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
         sortItem(in: section).count
@@ -132,7 +140,7 @@ extension AllTasksViewController: UITableViewDataSource, UITableViewDelegate {
     }
     
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
-        let cell = tableView.dequeueReusableCell(withIdentifier: "CellDoTo", for: indexPath) as! CellDoTo
+        let cell = tableView.dequeueReusableCell(withIdentifier: AllTasksToDoCell.identifier, for: indexPath) as! AllTasksToDoCell
         
         let sectionItem = sortItem(in: indexPath.section)
         let rowItem = sectionItem[indexPath.row]
@@ -164,11 +172,11 @@ extension AllTasksViewController: UITableViewDataSource, UITableViewDelegate {
 }
 
 extension AllTasksViewController {
-    func setUpViews() {
+    
+    
+    func setUpConstraints() {
         view.addSubview(tableView)
         
-    }
-    func setUpConstraints() {
         tableView.translatesAutoresizingMaskIntoConstraints = false
         
         NSLayoutConstraint.activate([

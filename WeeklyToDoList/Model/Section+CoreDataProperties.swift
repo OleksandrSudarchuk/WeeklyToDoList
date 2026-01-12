@@ -2,7 +2,7 @@
 //  Section+CoreDataProperties.swift
 //  WeeklyToDoList
 //
-//  Created by Oleksandr Sudarchuk on 01/12/2025.
+//  Created by Oleksandr Sudarchuk on 05/01/2026.
 //
 //
 
@@ -16,8 +16,8 @@ extension Section {
         return NSFetchRequest<Section>(entityName: "Section")
     }
 
-    @NSManaged public var titleOfSection: String?
     @NSManaged public var createdAt: Date?
+    @NSManaged public var titleOfSection: String?
     @NSManaged public var item: NSSet?
 
 }

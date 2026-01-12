@@ -13,6 +13,7 @@ class TabController: UITabBarController {
         super.viewDidLoad()
         view.backgroundColor = .systemBackground
         self.tabBar.isTranslucent = false
+        
         setUpTabBar()
     }
 //MARK: - Functions
@@ -30,6 +31,7 @@ class TabController: UITabBarController {
         let todayVC = createNavigationBar(with: "Today do", and: UIImage(systemName: "checklist"), vc: TodayViewController())
         let statsVC = createNavigationBar(with: "Your statistics", and: UIImage(systemName: "chart.line.uptrend.xyaxis"), vc: StatsViewController())
         self.setViewControllers([allTasksVC, planByDayVC, todayVC, statsVC], animated: true)
+        selectedIndex = 2
     }
 
 }
