@@ -13,7 +13,7 @@ static let identifier = "TodayViewCell"
     
     var onDoneChange: ((Bool) -> Void)?
     var isDone: Bool = false
-    var priority: Int16?
+    var priorityRaw: Int16?
     
     //MARK: - UI Components
     let titleLabel: UILabel = {
@@ -46,7 +46,7 @@ static let identifier = "TodayViewCell"
         onDoneChange = nil
         titleLabel.attributedText = nil
         isDone = false
-        priority = nil
+        priorityRaw = nil
         contentView.backgroundColor = .clear
         updateIconeButton()
         
@@ -56,10 +56,10 @@ static let identifier = "TodayViewCell"
     func configure(text: String, done: Bool, priority: Int16? ) {
         titleLabel.text = text
         isDone = done
-        self.priority = priority
+        self.priorityRaw = priority
         updateIconeButton()
-        crossText(text)
-        updatePriorityLabel()
+        priorityBackround()
+        titleLabel.attributedText = TextStyleFormat.attributedText(text, isDone: done)
         
     }
     
@@ -68,45 +68,17 @@ static let identifier = "TodayViewCell"
         doneButton.setImage(UIImage(systemName: name), for: .normal)
     }
     
-    func crossText(_ text: String) {
-        
-        
-        if isDone {
-            titleLabel.attributedText = NSAttributedString(string: text, attributes: [
-                .strikethroughStyle: NSUnderlineStyle.single.rawValue,
-                .foregroundColor: UIColor.secondaryLabel
-            ])
-        } else {
-            titleLabel.attributedText = NSAttributedString(string: text, attributes: [
-                .strikethroughStyle: 0,
-                .foregroundColor: UIColor.label])
-        }
+  
+    func priorityBackround() {
+        contentView.backgroundColor = PriorityColor.from(priorityRaw)?.backgroundColor ?? .clear
     }
-    
-    func priorityLabelBackround(for priority: Int16?) -> UIColor {
-        switch priority {
-        case 0:
-            return UIColor.systemRed.withAlphaComponent(0.15)
-        case 1:
-            return UIColor.systemYellow.withAlphaComponent(0.15)
-        case 2:
-            return UIColor.systemGreen.withAlphaComponent(0.15)
-        default:
-            return .clear
-        }
-    }
-    
-    func updatePriorityLabel() {
-        contentView.backgroundColor = priorityLabelBackround(for: priority)
-    }
-    
 
     //MARK: - Selectors
     @objc func doneTapped() {
         isDone.toggle()
         updateIconeButton()
-        let text = titleLabel.attributedText?.string ?? ""
-        crossText(text)
+        let text = titleLabel.text ?? ""
+        titleLabel.attributedText = TextStyleFormat.attributedText(text, isDone: self.isDone)
         onDoneChange?(isDone)
     }
 }
@@ -128,13 +100,13 @@ extension TodayViewCell {
         
 
         NSLayoutConstraint.activate([
-            titleLabel.leadingAnchor.constraint(equalTo: contentView.leadingAnchor, constant: 8),
+            titleLabel.leadingAnchor.constraint(equalTo: doneButton.trailingAnchor, constant: 8),
             titleLabel.centerYAnchor.constraint(equalTo: contentView.centerYAnchor),
-            titleLabel.trailingAnchor.constraint(lessThanOrEqualTo: doneButton.leadingAnchor, constant: -8),
+            titleLabel.trailingAnchor.constraint(lessThanOrEqualTo: contentView.trailingAnchor, constant: -8),
            
          
           
-            doneButton.trailingAnchor.constraint(equalTo: contentView.trailingAnchor, constant: -8),
+            doneButton.leadingAnchor.constraint(equalTo: contentView.leadingAnchor, constant: 8),
             doneButton.centerYAnchor.constraint(equalTo: contentView.centerYAnchor),
             doneButton.widthAnchor.constraint(equalToConstant: 40),
             doneButton.heightAnchor.constraint(equalToConstant: 40),

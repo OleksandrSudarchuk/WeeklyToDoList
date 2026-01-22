@@ -7,10 +7,9 @@
 
 import UIKit
 import CoreData
-
+// maybe do something with stats when its no plan for today -> nav button create and lable with warning
 class TodayViewController: UIViewController  {
  
-    
     //MARK: - Variables
     var sections: [Section] = []
     var plannedBySection: [[PlannedTask]] = []
@@ -78,6 +77,8 @@ class TodayViewController: UIViewController  {
         let sortedSection = grouped.keys.compactMap {$0}.sorted {
             ($0.createdAt ?? .distantPast) < ($1.createdAt ?? .distantPast)
         }
+        
+        
             self.sections = sortedSection
             self.plannedBySection = sortedSection.map { grouped[$0] ?? [] }
         

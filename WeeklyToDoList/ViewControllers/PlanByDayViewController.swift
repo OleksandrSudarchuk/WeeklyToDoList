@@ -9,27 +9,29 @@ import UIKit
 import CoreData
 
 class PlanByDayViewController: UIViewController {
-  
+    
     
     //MARK: - Variables
     var sections: [Section] = []
     var itemsBySection: [[Item]] = []
-    var selectedDay: Date?
+    let day: Date
     var selectedItemIds: [NSManagedObjectID : Int16] = [:]
-    let today = DayCalendar.startOfDay(Date())
+   
     
     //MARK: - UI Components
- let dataPickerView = DataPickerView()
+
     let tableView = UITableView()
-    let confirmButton: UIButton = {
-        let button = UIButton()
-        button.setTitle("Confirm", for: .normal)
-        button.backgroundColor = .systemBlue
-        button.layer.cornerRadius = 10
-        return button
-    }()
     
     //MARK: - LifeCycle
+    init(day: Date) {
+        self.day = DayCalendar.startOfDay(day)
+        super.init(nibName: nil, bundle: nil)
+       
+    }
+    required init?(coder: NSCoder) {
+        fatalError("init(coder:) has not been implemented")
+    }
+    
     override func viewDidLoad() {
         super.viewDidLoad()
 
@@ -38,28 +40,26 @@ class PlanByDayViewController: UIViewController {
         tableView.tableFooterView = UIView()
         tableView.register(CustomHeaderFooterView.self, forHeaderFooterViewReuseIdentifier: CustomHeaderFooterView.identifier)
         tableView.register(PlanByDayCell.self, forCellReuseIdentifier: PlanByDayCell.identifier)
-        confirmButton.addTarget(self, action: #selector(confirmButtonTapped), for: .touchUpInside)
         fetchDataFromAllTasks()
         setupUI()
-        bindDatePicker()
-        selectedDay = today
-        loadPlan(for: today)
+        navigationItem.rightBarButtonItem = UIBarButtonItem(title: "Confirm", style: .done, target: self, action: #selector(confirmButtonTapped))
+       
+        loadPlan(for: self.day)
     }
     
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
         fetchDataFromAllTasks()
-        if let day = selectedDay {
-            loadPlan(for: DayCalendar.startOfDay(day))
-        }
+        loadPlan(for: self.day)
+        title = DayDateFornatter.title(for: day)
     }
     //MARK: - Selectors
     @objc func confirmButtonTapped() {
-       guard let day = selectedDay else { return }
-        let normalized = DayCalendar.startOfDay(day)
-        selectedDay = normalized
-        savePlan(for: normalized)
-        loadPlan(for: normalized)
+       
+        savePlan(for: day)
+        let perviewVC = DayPreviewViewController(day: day)
+        navigationController?.setViewControllers(navigationController?.viewControllers.dropLast() ?? [] + [perviewVC], animated: true)
+
     }
     //MARK: - Functions
     func fetchDataFromAllTasks() {
@@ -79,9 +79,9 @@ class PlanByDayViewController: UIViewController {
                   }
               .sorted { ($0.createdAt ?? .distantPast) > ($1.createdAt ?? .distantPast)}}
             self.itemsBySection = itemsBySectionRequest
-            DispatchQueue.main.async {
+            
                 self.tableView.reloadData()
-            }
+            
         } catch {
             print("Error while fetch data from CoreData to display in PlanByDay: ", error)
         }
@@ -159,21 +159,7 @@ class PlanByDayViewController: UIViewController {
             print("Error while fetching PlannedTasks: ", error)
         }
     }
-    
-    func bindDatePicker() {
-        dataPickerView.onDateChanged = { [weak self] date in
-            self?.hadleDateChange(date)
-        }
-    }
-    
-    func hadleDateChange(_ date: Date) {
-        let normalized = DayCalendar.startOfDay(date)
-        selectedDay = normalized
-        loadPlan(for: normalized)
-    
-    }
   
-
 }
 
 //MARK: - Extensions
@@ -215,35 +201,20 @@ extension PlanByDayViewController: UITableViewDataSource, UITableViewDelegate  {
         return cell
     }
 }
+
 extension PlanByDayViewController {
     func setupUI() {
-        view.addSubview(dataPickerView)
         view.addSubview(tableView)
-        view.addSubview(confirmButton)
-        
-        dataPickerView.translatesAutoresizingMaskIntoConstraints = false
+  
         tableView.translatesAutoresizingMaskIntoConstraints = false
-        confirmButton.translatesAutoresizingMaskIntoConstraints = false
-        
+       
         NSLayoutConstraint.activate([
-           
-            
-            dataPickerView.topAnchor.constraint(equalTo: view.safeAreaLayoutGuide.topAnchor),
-            dataPickerView.leadingAnchor.constraint(equalTo: view.leadingAnchor),
-            dataPickerView.trailingAnchor.constraint(equalTo: view.trailingAnchor),
-            dataPickerView.heightAnchor.constraint(equalToConstant: 50),
          
-            tableView.topAnchor.constraint(equalTo: dataPickerView.bottomAnchor, constant: 8),
-                tableView.bottomAnchor.constraint(equalTo: confirmButton.topAnchor, constant: -8),
+            tableView.topAnchor.constraint(equalTo: view.safeAreaLayoutGuide.topAnchor),
+                tableView.bottomAnchor.constraint(equalTo: view.bottomAnchor),
                 tableView.leadingAnchor.constraint(equalTo: view.leadingAnchor),
                 tableView.trailingAnchor.constraint(equalTo: view.trailingAnchor),
             
-        
-            confirmButton.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: 16),
-            confirmButton.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: -16),
-            confirmButton.heightAnchor.constraint(equalToConstant: 55),
-            confirmButton.bottomAnchor.constraint(equalTo: view.safeAreaLayoutGuide.bottomAnchor, constant: -12)
-              
         ])
     }
 }

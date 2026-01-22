@@ -27,11 +27,11 @@ class TabController: UITabBarController {
     }
     func setUpTabBar() {
         let allTasksVC = createNavigationBar(with: "All tasks", and: UIImage(systemName: "list.bullet.clipboard"), vc: AllTasksViewController())
-        let planByDayVC = createNavigationBar(with: "Plan by day", and: UIImage(systemName: "calendar.badge.plus"), vc: PlanByDayViewController())
+        let calendarVC = createNavigationBar(with: "Calendar", and: UIImage(systemName: "calendar.badge.plus"), vc: CalendarViewController())
         let todayVC = createNavigationBar(with: "Today do", and: UIImage(systemName: "checklist"), vc: TodayViewController())
         let statsVC = createNavigationBar(with: "Your statistics", and: UIImage(systemName: "chart.line.uptrend.xyaxis"), vc: StatsViewController())
-        self.setViewControllers([allTasksVC, planByDayVC, todayVC, statsVC], animated: true)
-        selectedIndex = 2
+        self.setViewControllers([todayVC, calendarVC, allTasksVC, statsVC], animated: true)
+       
     }
 
 }
